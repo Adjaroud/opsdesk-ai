@@ -1,0 +1,34 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "127.0.0.1:18000:8000"
+    environment:
+      OPSDESK_LLM_PROVIDER: ${OPSDESK_LLM_PROVIDER:-openai}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPSDESK_LLM_MODEL: ${OPSDESK_LLM_MODEL:-}
+      OPSDESK_LLM_TIMEOUT_SECONDS: ${OPSDESK_LLM_TIMEOUT_SECONDS:-}
+      OPSDESK_DB: /store/opsdesk.db
+    volumes:
+      - opsdesk-data:/store
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 4s
+      retries: 10
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "127.0.0.1:8501:8501"
+    environment:
+      OPSDESK_API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  opsdesk-data:

@@ -1,0 +1,17 @@
+.venv
+.env
+.env.*
+secrets
+.git
+.pytest*
+**/__pycache__
+data/*.db*
+*.log
+review_exports
+*.zip
+COMPTE_RENDU_*.md
+OPSDESK_AI_CODEX_*.md
+.streamlit/secrets.toml
+.publication-check-*
+docs/media/demo_f.mp4
+docs/media/trace_et_sources.mp4
